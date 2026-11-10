@@ -1,0 +1,387 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>BrukStock</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: app de celular (máx. 440 px) centrada, barra de rol arriba y navegación por pestañas abajo */
+:root{
+  --bg:#EEF1EF; --surface:#FFFFFF; --surface-2:#F5F7F6; --line:#D9DFDC;
+  --fg:#18211D; --muted:#5B6863; --accent:#1F6B4F; --accent-fg:#FFFFFF; --accent-soft:#E1EFE8;
+  --warn:#9A5B0B; --warn-soft:#FBEFD9; --bad:#B3261E; --bad-soft:#FBE4E2; --ok:#1F6B4F;
+  --bubble:#DCF5E3;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1513; --surface:#18201D; --surface-2:#1E2824; --line:#2D3934;
+  --fg:#E6ECE9; --muted:#9AA8A2; --accent:#5DBF95; --accent-fg:#0B1A13; --accent-soft:#1D3A2E;
+  --warn:#E8B055; --warn-soft:#3A2C14; --bad:#F2867E; --bad-soft:#3D1E1C; --ok:#5DBF95; --bubble:#1F3A2B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1513; --surface:#18201D; --surface-2:#1E2824; --line:#2D3934;
+  --fg:#E6ECE9; --muted:#9AA8A2; --accent:#5DBF95; --accent-fg:#0B1A13; --accent-soft:#1D3A2E;
+  --warn:#E8B055; --warn-soft:#3A2C14; --bad:#F2867E; --bad-soft:#3D1E1C; --ok:#5DBF95; --bubble:#1F3A2B; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 24px}
+.app{max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.proto{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.proto b{color:var(--fg)}
+.linkbtn{background:none;border:0;color:var(--accent);font:inherit;font-weight:600;cursor:pointer;padding:4px 0}
+header.top{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.brand{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.brand h1{font-family:var(--display);font-size:22px;margin:0;letter-spacing:-.01em}
+.brand span{font-size:12px;color:var(--muted)}
+label.role{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+select,input{font:inherit;color:var(--fg);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;width:100%}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+nav.tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
+nav.tabs button{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;font-weight:600;padding:10px 4px;border-radius:10px;cursor:pointer;min-height:44px}
+nav.tabs button[aria-current="page"]{background:var(--accent-soft);color:var(--fg)}
+main{display:flex;flex-direction:column;gap:12px;min-height:50vh}
+.screen-h{display:flex;flex-direction:column;gap:2px}
+.screen-h h2{font-family:var(--display);font-size:20px;margin:0;text-wrap:balance}
+.req{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{margin:0;font-size:16px;font-weight:700}
+.sub{font-size:13px;color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.row>div{min-width:0}
+.list{display:flex;flex-direction:column}
+.item{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0;padding-top:0}
+.name{font-weight:600}
+.nums{font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:inherit;font-weight:700;border-radius:12px;padding:12px 16px;min-height:48px;cursor:pointer;width:100%}
+a.btn{display:block}
+.btn.sec{background:transparent;color:var(--accent)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--fg)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns .btn{flex:1 1 140px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.pill.ok{background:var(--accent-soft);color:var(--ok);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.stepper{display:grid;grid-template-columns:48px 1fr 48px;gap:6px;align-items:center}
+.stepper button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font-size:20px;font-weight:700;cursor:pointer}
+.stepper input{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+.field{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.err{color:var(--bad);font-size:13px;font-weight:600}
+.note{font-size:13px;background:var(--surface-2);border-radius:10px;padding:10px 12px;color:var(--muted)}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.catbtn{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;font:inherit;color:var(--fg);cursor:pointer;min-height:56px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600}
+td.r,th.r{text-align:right}
+.wa{background:var(--bubble);border-radius:12px 12px 12px 2px;padding:12px;white-space:pre-wrap;font-size:14px;font-family:var(--body)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.log{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.log div{display:flex;gap:8px}
+.log time{font-variant-numeric:tabular-nums;color:var(--fg);font-weight:600;white-space:nowrap}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;max-width:calc(100% - 32px);z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.diff-neg{color:var(--bad);font-weight:700}
+.diff-pos{color:var(--warn);font-weight:700}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:inherit;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.toast{animation:pop .18s ease-out}@keyframes pop{from{opacity:0;transform:translate(-50%,6px)}}}
+</style>
+
+<div class="app">
+  <div class="proto"><span><b>Prototipo para validar requisitos</b> · datos ficticios, no guarda nada</span><button class="linkbtn" id="reset">Reiniciar demo</button></div>
+  <header class="top">
+    <div class="brand"><h1>BrukStock</h1><span>Brukbar · martes 03/11/2026</span></div>
+    <label class="role" for="rol">Ver como
+      <select id="rol">
+        <option value="socio">Adriano Marcellino · Socio</option>
+        <option value="encargado">Yamila Gómez · Encargada de turno</option>
+        <option value="conteo">Yamila Gómez · Personal de conteo</option>
+      </select>
+    </label>
+  </header>
+  <main id="main"></main>
+  <nav class="tabs" id="tabs" aria-label="Secciones"></nav>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const ROLES={
+  socio:{user:"Adriano Marcellino",label:"Socio",tabs:["inicio","pedidos","recepcion","conciliacion"]},
+  encargado:{user:"Yamila Gómez",label:"Encargada de turno",tabs:["inicio","conteo","recepcion"]},
+  conteo:{user:"Yamila Gómez",label:"Personal de conteo",tabs:["inicio","conteo"]}
+};
+const TABNAMES={inicio:"Inicio",conteo:"Conteo",pedidos:"Pedidos",recepcion:"Recepción",conciliacion:"Conciliación"};
+const PROV={
+  andina:{name:"Distribuidora Andina",wa:"11 2399-3023",cond:"10+2 en destilados",aparte:"Gaseosas y aguas"},
+  sur:{name:"Sabores del Sur",wa:"",cond:"Contado a 7 días",aparte:""},
+  tito:{name:"Verdulería Don Tito",wa:"11 2399-3023",cond:"Contado contra entrega",aparte:""}
+};
+// cat, unidad de conteo, fraccionable, perecedero, min, obj, umbral de recuento en unidades (um, RB06), presentación, proveedor, aparte, stock teórico FUDO
+const PRODUCTS=[
+ {id:"bee",name:"Gin Beefeater 700 ml",cat:"Destilados",u:"botella",frac:true,per:false,min:4,obj:10,um:1,pres:1,prov:"andina",fudo:4},
+ {id:"bom",name:"Gin Bombay 750 ml",cat:"Destilados",u:"botella",frac:true,per:false,min:3,obj:8,um:1,pres:1,prov:"andina",fudo:6},
+ {id:"fer",name:"Fernet Branca 750 ml",cat:"Destilados",u:"botella",frac:true,per:false,min:6,obj:18,um:2,pres:1,prov:"andina",fudo:11},
+ {id:"ipa",name:"Cerveza IPA lata 473 ml",cat:"Cervezas",u:"lata",frac:false,per:false,min:24,obj:72,um:6,pres:24,presName:"pack de 24",prov:"andina",fudo:31},
+ {id:"gol",name:"Cerveza Golden lata 473 ml",cat:"Cervezas",u:"lata",frac:false,per:false,min:24,obj:48,um:6,pres:24,presName:"pack de 24",prov:"andina",fudo:-4},
+ {id:"ton",name:"Agua tónica 1,5 L",cat:"Sin alcohol",u:"botella",frac:false,per:false,min:12,obj:36,um:6,pres:6,presName:"pack de 6",prov:"andina",aparte:true,fudo:10},
+ {id:"agu",name:"Agua sin gas 500 ml",cat:"Sin alcohol",u:"botella",frac:false,per:false,min:24,obj:48,um:6,pres:12,presName:"pack de 12",prov:"andina",aparte:true,fudo:20},
+ {id:"pol",name:"Pollo entero",cat:"Carnes",u:"unidad",frac:false,per:true,min:6,obj:15,pres:1,prov:"sur",entrega:"kg",eq:2.2,um:1,fudo:6},
+ {id:"pic",name:"Carne picada",cat:"Carnes",u:"kg",frac:true,per:true,min:3,obj:8,um:1,pres:1,prov:"sur",fudo:5.5},
+ {id:"bon",name:"Bondiola",cat:"Carnes",u:"kg",frac:true,per:true,min:2,obj:5,um:1,pres:1,prov:"sur",fudo:5},
+ {id:"lim",name:"Limón",cat:"Verdulería",u:"cajón",frac:true,per:true,min:1,obj:2,pres:1,prov:"tito",entrega:"kg",eq:18,um:1,fudo:1},
+ {id:"men",name:"Menta",cat:"Verdulería",u:"atado",frac:false,per:true,min:3,obj:6,um:1,pres:1,prov:"tito",fudo:2},
+ {id:"lma",name:"Lima",cat:"Verdulería",u:"cajón",frac:true,per:true,min:1,obj:1,um:1,pres:1,prov:"tito",entrega:"kg",eq:18,fudo:0.5}
+];
+const P=Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));
+const CATS=[...new Set(PRODUCTS.map(p=>p.cat))];
+const HORARIO_RECEPCION="de 17 a 20 h, antes de la apertura"; // lo define el Socio (el local abre de 20 a 4 h)
+const MOTIVOS=["Merma","Factura no cargada","Consumo no cargado","Otro"];
+const TIPOS=["Faltante","Excedente","Producto equivocado","Dañado","Vencido"];
+
+function initial(){
+  return {
+    rol:"socio", tab:"inicio", seq:4,
+    lastConteo:{fecha:"27/10/2026",user:"Yamila Gómez",vals:{bee:3.5,bom:6,fer:8,ipa:30,gol:12,ton:14,agu:20,pol:4,pic:5,bon:5,lim:1,men:2,lma:0.5}},
+    conteo:null, conteoCat:null, conteoFinish:false,
+    draft:null, // pedido sugerido en edición por proveedor
+    pedidos:[{id:"P-0412",prov:"tito",estado:"Enviado",items:[{id:"lim",sug:1,qty:2},{id:"men",sug:4,qty:4},{id:"lma",sug:1,qty:1}],aprob:"03/11 10:02",env:"03/11 10:15"}],
+    hoja:null, recepcion:null, incid:null,
+    conc:{}, // por producto: {estado, recuento, motivo, obs}
+    historialInc:[{prov:"andina",prod:"ipa",tipo:"Faltante",cant:24,fecha:"28/10/2026"}],
+    log:[["03/11 10:15","Adriano Marcellino","Confirmó el envío del pedido P-0412 a Verdulería Don Tito"],["03/11 10:02","Adriano Marcellino","Aprobó el pedido P-0412"],["27/10 23:52","Yamila Gómez","Finalizó el conteo del 27/10/2026"]]
+  };
+}
+let S=initial();
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// Normaliza un teléfono argentino al formato internacional que pide wa.me (ej. "11 5555-0142" -> "5491155550142")
+const waNum=t=>{let d=String(t||"").replace(/\D/g,"");
+  if(d.startsWith("00"))d=d.slice(2);
+  if(d.startsWith("54")){d=d.slice(2);if(d.startsWith("9"))d=d.slice(1);}
+  if(d.startsWith("0"))d=d.slice(1);
+  d=d.replace(/^(\d{2,4}?)15(\d{6,8})$/,(m,a,n)=>(a+n).length===10?a+n:m); // quita el "15" de celulares viejos
+  return d.length===10?"549"+d:d;};
+const fmt=n=>(Math.round(n*100)/100).toLocaleString("es-AR");
+const now=()=>{const d=new Date();return "03/11 "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+function log(t){S.log.unshift([now(),ROLES[S.rol].user,t])}
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,2600)}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast("Texto copiado")}catch(e){toast("No se pudo copiar: seleccioná el texto y copialo a mano")}}
+const PL={unidad:"unidades",cajón:"cajones",kg:"kg",botella:"botellas",lata:"latas",atado:"atados"};
+const pl=u=>PL[u]||u+"s";
+const unitTxt=(p,q)=>`${fmt(q)} ${q==1?p.u:pl(p.u)}`;
+
+// ---------- Pedido sugerido (RF09) ----------
+function sugerencia(){
+  const out={};
+  for(const p of PRODUCTS){
+    if(S.pedidos.some(o=>o.prov===p.prov && o.estado!=="Borrador")) continue;
+    const st=S.lastConteo.vals[p.id];
+    if(st===undefined){(out[p.prov]??={items:[],sinContar:[]}).sinContar.push(p.id);continue}
+    const bajo=st<p.min; let need=p.obj-st;
+    let q=need>0?Math.ceil(need/p.pres)*p.pres:0;
+    if(bajo && q===0) q=p.pres;
+    const g=(out[p.prov]??={items:[],sinContar:[]});
+    if(q>0) g.items.push({id:p.id,sug:q,qty:q,bajo});
+  }
+  return out;
+}
+function ensureDraft(){ if(!S.draft) S.draft=sugerencia(); }
+
+// ---------- Render ----------
+function render(){
+  const r=ROLES[S.rol];
+  if(!r.tabs.includes(S.tab)) S.tab="inicio";
+  $("#rol").value=S.rol;
+  $("#tabs").innerHTML=r.tabs.map(t=>`<button data-tab="${t}" ${S.tab===t?'aria-current="page"':""}>${TABNAMES[t]}</button>`).join("");
+  const v={inicio:vInicio,conteo:vConteo,pedidos:vPedidos,recepcion:vRecepcion,conciliacion:vConciliacion}[S.tab]();
+  $("#main").innerHTML=v;
+}
+const H=(t,req)=>`<div class="screen-h"><h2>${t}</h2><span class="req">${req}</span></div>`;
+const estadoPill=e=>`<span class="pill ${e==="Recibido"||e==="Cerrado"?"ok":e==="Recibido parcial"?"bad":e==="Enviado"||e==="Aprobado"?"warn":""}">${e}</span>`;
+
+function vInicio(){
+  const r=ROLES[S.rol];
+  const pend=Object.values(S.conc).filter(c=>c.estado==="pedido").length;
+  return H(`Hola, ${r.user.split(" ")[0]}`,`Rol: ${r.label} · solo ves las funciones de tu rol (RNF05)`)+
+  `<section class="card"><h3>Pedidos de esta semana</h3><div class="list">${S.pedidos.length?S.pedidos.map(o=>`<div class="item"><div class="row"><div><div class="name">${o.id} · ${PROV[o.prov].name}</div><div class="sub">${o.items.length} productos${o.env?" · enviado "+o.env:o.aprob?" · aprobado "+o.aprob:""}</div></div>${estadoPill(o.estado)}</div></div>`).join(""):`<p class="sub">Todavía no hay pedidos aprobados.</p>`}</div></section>`+
+  (S.rol!=="socio"&&pend?`<section class="card"><h3>Tenés ${pend} recuento${pend>1?"s":""} pendiente${pend>1?"s":""}</h3><button class="btn" data-go="conteo">Ir al conteo</button></section>`:"")+
+  `<section class="card"><h3>Último conteo finalizado</h3><p class="sub">${S.lastConteo.fecha} · ${S.lastConteo.user} · ${Object.keys(S.lastConteo.vals).length} de ${PRODUCTS.length} productos contados</p></section>`+
+  `<section class="card"><h3>Actividad</h3><p class="sub">Registro de auditoría: nadie lo puede editar ni borrar (RNF06)</p><div class="log">${S.log.slice(0,6).map(l=>`<div><time>${l[0]}</time><span>${esc(l[1])}: ${esc(l[2])}</span></div>`).join("")}</div></section>`;
+}
+
+// ---------- Conteo (RF06, RF07, RF21, RD01, RNF01) ----------
+function vConteo(){
+  let html=H("Conteo de inventario","RF06 · RF07 · RF21 · RNF01 · CU03 / HU01");
+  const rec=Object.entries(S.conc).filter(([k,c])=>c.estado==="pedido");
+  if(rec.length){
+    html+=`<section class="card"><h3>Recuentos pedidos por el socio</h3><p class="sub">La diferencia con FUDO supera el umbral de recuento que definió el socio: contá de nuevo estos productos (RF21).</p><div class="list">${rec.map(([id])=>{const p=P[id];return `<div class="item"><div class="name">${p.name}</div><div class="sub">Unidad: ${p.u}</div>${stepper("rc-"+id,"")}</div>`}).join("")}</div><button class="btn" data-act="guardarRecuento">Guardar recuento</button></section>`;
+  }
+  const c=S.conteo;
+  if(!c){
+    return html+`<section class="card"><h3>No hay un conteo en curso</h3><p class="sub">Último conteo finalizado: ${S.lastConteo.fecha} por ${S.lastConteo.user}.</p><button class="btn" data-act="iniciarConteo">Iniciar conteo</button></section>`;
+  }
+  const faltan=cat=>PRODUCTS.filter(p=>p.cat===cat&&c.vals[p.id]===undefined).length;
+  const total=PRODUCTS.filter(p=>c.vals[p.id]===undefined);
+  if(c.pausado){
+    return html+`<section class="card"><h3>Conteo en pausa</h3><p class="sub">Contaste ${PRODUCTS.length-total.length} de ${PRODUCTS.length} productos. Podés retomarlo cuando quieras.</p><button class="btn" data-act="retomar">Retomar conteo</button></section>`;
+  }
+  if(S.conteoFinish){
+    return html+`<section class="card"><h3>Quedan ${total.length} productos sin contar</h3><p class="sub">Si cerrás igual, no van a entrar en el pedido sugerido ni en la conciliación (RF07).</p><ul>${total.map(p=>`<li>${p.name} <span class="sub">(${p.cat})</span></li>`).join("")}</ul><div class="btns"><button class="btn" data-act="seguir">Seguir contando</button><button class="btn sec" data-act="cerrarIgual">Cerrar igual</button></div></section>`;
+  }
+  if(!S.conteoCat){
+    return html+`<section class="card"><div class="row"><h3>Elegí una categoría</h3><span class="pill">${total.length} sin contar</span></div><div class="list" style="gap:8px">${CATS.map(cat=>{const f=faltan(cat);return `<button class="catbtn" data-cat="${cat}"><span class="name">${cat}</span><span class="pill ${f?"warn":"ok"}">${f?`Faltan ${f}`:"Completa"}</span></button>`}).join("")}</div><div class="btns"><button class="btn ghost" data-act="pausar">Pausar</button><button class="btn" data-act="finalizar">Finalizar conteo</button></div></section>`;
+  }
+  const items=PRODUCTS.filter(p=>p.cat===S.conteoCat);
+  return html+`<section class="card"><div class="row"><h3>${S.conteoCat}</h3><button class="linkbtn" data-act="volverCats">← Categorías</button></div><div class="list">${items.map(p=>`<div class="item"><div class="row"><div><div class="name">${p.name}</div><div class="sub">En ${pl(p.u)}${p.frac?" · acepta decimales (botella abierta)":""}</div></div>${c.vals[p.id]!==undefined?'<span class="pill ok">Contado</span>':""}</div>${stepper("c-"+p.id,c.vals[p.id]??"",p.frac)}<div class="err" id="e-${p.id}"></div></div>`).join("")}</div><button class="btn sec" data-act="volverCats">Listo, volver a categorías</button></section>`;
+}
+function stepper(id,val,frac){return `<div class="stepper"><button type="button" aria-label="Restar" data-step="${id}" data-d="-1">−</button><input id="${id}" data-count="${id}" inputmode="${frac?"decimal":"numeric"}" value="${val}" placeholder="0" aria-label="Cantidad"><button type="button" aria-label="Sumar" data-step="${id}" data-d="1">+</button></div>`}
+
+function setCount(key,raw){
+  const id=key.slice(2), p=P[id], e=$("#e-"+id);
+  const s=String(raw).trim().replace(",",".");
+  if(s===""){delete S.conteo.vals[id];return true}
+  const n=Number(s);
+  if(!/^\d+(\.\d{1,2})?$/.test(s)||isNaN(n)){ if(e) e.textContent=p.frac?"Ingresá un número mayor o igual a cero, con hasta dos decimales.":"Ingresá un número entero mayor o igual a cero."; return false}
+  if(!p.frac && !Number.isInteger(n)){ if(e) e.textContent=`${p.name} se cuenta por ${p.u} entera.`; return false}
+  S.conteo.vals[id]=n; return true;
+}
+
+// ---------- Pedidos (RF09 a RF14) ----------
+function vPedidos(){
+  if(S.hoja) return vHoja();
+  ensureDraft();
+  let html=H("Pedido sugerido del martes","RF09 · RF10 · RF11 · CU05 / HU02");
+  html+=`<p class="note">Cantidad sugerida = nivel objetivo − stock del conteo del ${S.lastConteo.fecha}, redondeada hacia arriba a la presentación del proveedor. Lo que está bajo el mínimo entra siempre.</p>`;
+  for(const [prov,g] of Object.entries(S.draft)){
+    const pv=PROV[prov];
+    const ya=S.pedidos.find(o=>o.prov===prov&&o.estado!=="Borrador");
+    if(ya) continue;
+    const resto=PRODUCTS.filter(p=>p.prov===prov&&!g.items.some(i=>i.id===p.id));
+    html+=`<section class="card"><div class="row"><div><h3>${pv.name}</h3><div class="sub">Condición: ${pv.cond}</div></div><span class="pill">Borrador</span></div><div class="list">${g.items.map(i=>{const p=P[i.id],st=S.lastConteo.vals[i.id];return `<div class="item"><div class="row"><div><div class="name">${p.name}</div><div class="sub nums">Stock ${fmt(st)} · mín. ${p.min} · obj. ${p.obj}${p.presName?" · "+p.presName:""}</div></div>${i.bajo?'<span class="pill bad">Bajo mínimo</span>':""}</div><div class="row"><span class="sub nums">Sugerido: <b>${fmt(i.sug)}</b>${i.qty!==i.sug?` → final <b>${fmt(i.qty)}</b>`:""}</span><button class="linkbtn" data-quitar="${prov}|${i.id}">Quitar</button></div><div class="stepper"><button type="button" aria-label="Restar" data-qty="${prov}|${i.id}" data-d="-${p.pres}">−</button><input class="nums" value="${fmt(i.qty)} ${pl(p.u)}" readonly aria-label="Cantidad final"><button type="button" aria-label="Sumar" data-qty="${prov}|${i.id}" data-d="${p.pres}">+</button></div></div>`}).join("")}</div>`+
+    (g.sinContar.length?`<p class="note warn">Sin contar en el último conteo, fuera de la sugerencia: ${g.sinContar.map(id=>P[id].name).join(", ")}.</p>`:"")+
+    (resto.length?`<label class="field" for="add-${prov}">Agregar un producto no sugerido<select id="add-${prov}" data-add="${prov}"><option value="">Elegí un producto…</option>${resto.map(p=>`<option value="${p.id}">${p.name}</option>`).join("")}</select></label>`:"")+
+    (S.rol==="socio"?`<button class="btn" data-aprobar="${prov}" ${g.items.length?"":"disabled"}>Aprobar pedido a ${pv.name}</button>`:`<p class="note">Solo un socio puede aprobar pedidos (RB01).</p>`)+`</section>`;
+  }
+  const otros=S.pedidos.filter(o=>o.estado!=="Borrador");
+  html+=`<section class="card"><h3>Pedidos aprobados y enviados</h3><div class="list">${otros.map(o=>`<div class="item"><div class="row"><div><div class="name">${o.id} · ${PROV[o.prov].name}</div><div class="sub">${o.items.length} productos</div></div>${estadoPill(o.estado)}</div><button class="btn sec" data-hoja="${o.id}">Ver hoja de pedido</button></div>`).join("")}</div><p class="sub">Estados: borrador → aprobado → enviado → recibido o recibido parcial → cerrado (RF14).</p></section>`;
+  return html;
+}
+function mensaje(o){
+  const pv=PROV[o.prov];
+  const norm=o.items.filter(i=>!P[i.id].aparte), ap=o.items.filter(i=>P[i.id].aparte);
+  let t=`Hola, te paso el pedido de Brukbar para el miércoles 04/11:\n\n`+norm.map(i=>`• ${P[i.id].name}: ${unitTxt(P[i.id],i.qty)}`).join("\n");
+  if(ap.length) t+=`\n\nFACTURA APARTE\n`+ap.map(i=>`• ${P[i.id].name}: ${unitTxt(P[i.id],i.qty)}`).join("\n");
+  return t+`\n\nHorario de recepción: ${HORARIO_RECEPCION}.\n\nGracias.`;
+}
+function vHoja(){
+  const o=S.pedidos.find(x=>x.id===S.hoja), pv=PROV[o.prov], msg=mensaje(o);
+  return H(`Hoja de pedido ${o.id}`,"RF12 · RF13 · RF14 · CU06 / HU03")+
+  `<button class="linkbtn" data-act="cerrarHoja">← Volver a pedidos</button>
+  <section class="card"><div class="row"><h3>${pv.name}</h3>${estadoPill(o.estado)}</div>
+  <div class="sub nums">Fecha del pedido: martes 03/11/2026 · Entrega esperada: miércoles 04/11/2026<br>Condición comercial: ${pv.cond}${pv.aparte?" · Factura aparte: "+pv.aparte:""}<br>Horario de recepción: ${HORARIO_RECEPCION}</div>
+  <div class="tablewrap"><table><thead><tr><th>Producto</th><th class="r">Cantidad</th></tr></thead><tbody>${o.items.map(i=>`<tr><td>${P[i.id].name}${P[i.id].aparte?' <span class="pill">Factura aparte</span>':""}</td><td class="r">${unitTxt(P[i.id],i.qty)}</td></tr>`).join("")}</tbody></table></div></section>
+  <section class="card"><h3>Mensaje para WhatsApp</h3><div class="wa" id="msg">${esc(msg)}</div>
+  ${pv.wa?`<div class="sub">Contacto: ${pv.wa}</div>`:`<p class="note warn">${pv.name} no tiene contacto de WhatsApp cargado: copiá el texto y envialo a mano.</p>`}
+  <div class="btns">${pv.wa?`<a class="btn" style="text-align:center;text-decoration:none" href="https://wa.me/${waNum(pv.wa)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Enviar por WhatsApp</a>`:""}<button class="btn sec" data-act="copiarMsg">Copiar texto</button></div>
+  ${o.estado==="Aprobado"&&S.rol==="socio"?`<button class="btn" data-enviado="${o.id}">Confirmar que lo envié</button>`:o.env?`<p class="sub">Enviado el ${o.env}.</p>`:""}</section>`;
+}
+
+// ---------- Recepción (RF04, RF16, RF17, RF18) ----------
+function vRecepcion(){
+  let html=H("Recepción de mercadería","RF04 · RF16 · RF17 · RF18 · RD01 · RD03 · CU08 / CU13");
+  if(S.incid) return html+vIncid();
+  const env=S.pedidos.filter(o=>o.estado==="Enviado");
+  if(!S.recepcion){
+    return html+`<section class="card"><h3>Pedidos enviados para recibir</h3>${env.length?`<div class="list">${env.map(o=>`<div class="item"><div class="row"><div><div class="name">${PROV[o.prov].name}</div><div class="sub">${o.id} · ${o.items.length} productos · enviado ${o.env}</div></div></div><button class="btn" data-recibir="${o.id}">Recibir este pedido</button></div>`).join("")}</div>`:`<p class="sub">No hay pedidos enviados pendientes de recibir.</p>`}</section>`;
+  }
+  const R=S.recepcion, o=S.pedidos.find(x=>x.id===R.id);
+  const ok=o.items.every(i=>R.lin[i.id].estado&&(R.lin[i.id].estado==="completo"||R.lin[i.id].cant!=="")&&(!P[i.id].per||R.lin[i.id].venc));
+  return html+`<button class="linkbtn" data-act="cancelarRec">← Volver</button><section class="card"><div class="row"><div><h3>${PROV[o.prov].name}</h3><div class="sub">${o.id} · tildá lo que llegó bien y corregí solo lo distinto</div></div></div><div class="list">${o.items.map(i=>{const p=P[i.id],L=R.lin[i.id],uE=p.entrega||p.u;const conv=L.estado==="distinto"&&L.cant!==""?Number(String(L.cant).replace(",","."))/(p.eq||1):null;const dif=conv!==null?conv-i.qty:null;return `<div class="item"><div class="row"><div><div class="name">${p.name}</div><div class="sub nums">Pedido: ${unitTxt(p,i.qty)}${p.eq?` · llega en ${uE} (1 ${p.u} = ${fmt(p.eq)} ${uE}, RF04)`:""}</div></div></div><div class="seg"><button data-lin="${i.id}|completo" aria-pressed="${L.estado==="completo"}">✓ Llegó completo</button><button data-lin="${i.id}|distinto" aria-pressed="${L.estado==="distinto"}">Llegó distinto</button></div>${L.estado==="distinto"?`<label class="field" for="rq-${i.id}">Cantidad recibida en ${uE}<input id="rq-${i.id}" data-rq="${i.id}" inputmode="decimal" value="${L.cant}" placeholder="0"></label>${dif!==null?`<div class="sub nums">Equivale a ${fmt(conv)} ${pl(p.u)} · diferencia <span class="${dif<0?"diff-neg":dif>0?"diff-pos":""}">${dif>0?"+":""}${fmt(dif)}</span></div>`:""}`:""}${p.per?`<label class="field" for="rv-${i.id}">Vencimiento (perecedero)<input type="date" id="rv-${i.id}" data-rv="${i.id}" value="${L.venc||""}" min="2026-11-04"></label>`:""}</div>`}).join("")}</div></section>
+  <section class="card"><h3>Facturas del proveedor</h3><p class="sub">Sin al menos una factura, la mercadería no se da por ingresada (RB05). Podés cargar más de una.</p><div class="chips">${R.fact.map(f=>`<span class="pill ok">${esc(f)}</span>`).join("")||'<span class="sub">Todavía no cargaste facturas.</span>'}</div><div class="row"><input id="factIn" placeholder="0003-00012345" inputmode="numeric" aria-label="Número de factura"><button class="btn sec" style="width:auto" data-act="addFact">Agregar</button></div><div class="err" id="factErr"></div></section>
+  <button class="btn" data-act="confirmarRec" ${ok&&R.fact.length?"":"disabled"}>Confirmar recepción</button>${!R.fact.length?'<p class="sub" style="text-align:center">Cargá el número de factura para confirmar.</p>':!ok?'<p class="sub" style="text-align:center">Marcá cada producto y completá los vencimientos.</p>':""}`;
+}
+function vIncid(){
+  const I=S.incid,o=S.pedidos.find(x=>x.id===I.id);
+  const txt=`Hola, en la entrega del pedido ${o.id} (factura ${I.fact.join(", ")}) encontramos:\n`+I.items.map(x=>`• ${P[x.id].name}: ${x.tipo.toLowerCase()}, ${fmt(Math.abs(x.cant))} ${pl(P[x.id].u)}`).join("\n");
+  return `<section class="card"><h3>La entrega tiene diferencias</h3><p class="sub">Registrá la incidencia de cada producto. Las cantidades vienen de la recepción (RF18).</p><div class="list">${I.items.map((x,k)=>`<div class="item"><div class="name">${P[x.id].name}</div><div class="sub nums">Diferencia: ${x.cant>0?"+":""}${fmt(x.cant)} ${pl(P[x.id].u)}</div><label class="field" for="ti-${k}">Tipo de incidencia<select id="ti-${k}" data-tipo="${k}">${TIPOS.map(t=>`<option ${t===x.tipo?"selected":""}>${t}</option>`).join("")}</select></label></div>`).join("")}</div><div class="wa">${esc(txt)}</div><div class="btns"><button class="btn sec" data-act="copiarInc">Copiar detalle para reclamar</button><button class="btn" data-act="guardarInc">Guardar incidencias</button></div></section>`;
+}
+
+// ---------- Conciliación (RF20, RF21, RF22) ----------
+function vConciliacion(){
+  const rows=PRODUCTS.filter(p=>S.lastConteo.vals[p.id]!==undefined).map(p=>{
+    const c=S.conc[p.id]||{}; const cont=c.recuento!==undefined?c.recuento:S.lastConteo.vals[p.id];
+    const d=cont-p.fudo; const pct=p.fudo>0?d/p.fudo*100:null; return {p,c,cont,d,pct};
+  }).filter(r=>r.d!==0||S.conc[r.p.id]).sort((a,b)=>(Math.abs(b.pct??999))-(Math.abs(a.pct??999)));
+  let html=H("Conciliación con FUDO","RF20 · RF21 · RF22 · RB06 · RB07 · CU09 / HU06");
+  html+=`<p class="note">Conteo del ${S.lastConteo.fecha} (${S.lastConteo.user}) contra la importación de FUDO del 27/10/2026 23:40. Incluye los productos de barra y de cocina (RF20). Recuento obligatorio cuando la diferencia supera el umbral en unidades que el socio define para cada producto (RB06).</p>`;
+  html+=`<section class="card"><h3>${rows.filter(r=>r.d!==0).length} productos con diferencia</h3><div class="list">${rows.map(({p,c,cont,d,pct})=>{
+    const inc=S.historialInc.filter(h=>h.prod===p.id);
+    const supera=Math.abs(d)>p.um;
+    let acc="";
+    if(d===0&&c.recuento!==undefined) acc=`<span class="pill ok">Recuento sin diferencia: descartada</span>`;
+    else if(c.aprob) acc=`<span class="pill ok">Aprobada · ${esc(c.motivo)}${c.obs?": "+esc(c.obs):""}</span>`;
+    else if(supera&&c.recuento===undefined&&c.estado!=="pedido") acc=S.rol==="socio"?`<button class="btn sec" data-recuento="${p.id}">Pedir recuento</button>`:"";
+    else if(c.estado==="pedido") acc=`<span class="pill warn">Recuento pedido: lo hace el personal de conteo</span>`;
+    else acc=`<label class="field" for="m-${p.id}">Motivo de la diferencia<select id="m-${p.id}" data-motivo="${p.id}"><option value="">Elegí un motivo…</option>${MOTIVOS.map(m=>`<option ${c.motivo===m?"selected":""}>${m}</option>`).join("")}</select></label>${c.motivo==="Otro"?`<label class="field" for="o-${p.id}">Observación (obligatoria para “Otro”)<input id="o-${p.id}" data-obs="${p.id}" value="${esc(c.obs||"")}"></label>`:""}${S.lastConteo.user===ROLES[S.rol].user?`<p class="note">Contaste este inventario: la diferencia la aprueba un socio que no haya contado (RB07).</p>`:`<button class="btn" data-aprobDif="${p.id}" ${c.motivo&&(c.motivo!=="Otro"||(c.obs||"").trim())?"":"disabled"}>Aprobar diferencia</button>`}`;
+    return `<div class="item"><div class="row"><div class="name">${p.name}</div>${d===0?'':supera?'<span class="pill bad">Supera el umbral</span>':'<span class="pill">Dentro del umbral</span>'}</div><div class="tablewrap"><table><thead><tr><th class="r">Contado</th><th class="r">FUDO</th><th class="r">Dif.</th><th class="r">%</th></tr></thead><tbody><tr><td class="r">${fmt(cont)}${c.recuento!==undefined?" (recuento)":""}</td><td class="r">${fmt(p.fudo)}</td><td class="r ${d<0?"diff-neg":d>0?"diff-pos":""}">${d>0?"+":""}${fmt(d)}</td><td class="r">${pct===null?"—":(pct>0?"+":"")+fmt(pct)+" %"}</td></tr></tbody></table></div><div class="sub">Umbral de recuento: ${unitTxt(p,p.um)}</div>${pct===null?'<p class="note warn">FUDO muestra stock negativo: falta cargar una compra o hay ventas sin receta. No se puede calcular el porcentaje.</p>':""}${inc.length?`<div class="sub">Tuvo ${inc.length} incidencia de entrega en el período (${inc.map(h=>h.tipo.toLowerCase()+" del "+h.fecha).join(", ")}).</div>`:""}${acc}</div>`}).join("")}</div><p class="sub">Las diferencias se muestran por producto, nunca por empleado.</p></section>`;
+  return html;
+}
+
+// ---------- Eventos ----------
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button,[data-cat]"); if(!b) return;
+  const d=b.dataset;
+  if(d.tab){S.tab=d.tab;S.hoja=null;render();scrollTo(0,0);return}
+  if(d.go){S.tab=d.go;render();return}
+  if(d.cat){S.conteoCat=d.cat;render();return}
+  if(d.step){const inp=$("#"+d.step);const id=d.step.split("-")[1];const p=P[id];const cur=Number(String(inp.value||"0").replace(",","."))||0;const n=Math.max(0,Math.round((cur+Number(d.d))*100)/100);inp.value=fmt(n).replace(".","");if(d.step.startsWith("c-")){setCount(d.step,String(n));render()}return}
+  if(d.qty){const [prov,id]=d.qty.split("|");const it=S.draft[prov].items.find(i=>i.id===id);it.qty=Math.max(P[id].pres,it.qty+Number(d.d));render();return}
+  if(d.quitar){const [prov,id]=d.quitar.split("|");S.draft[prov].items=S.draft[prov].items.filter(i=>i.id!==id);toast("Producto quitado del pedido");render();return}
+  if(d.aprobar){const g=S.draft[d.aprobar];const id="P-04"+(10+S.seq++);S.pedidos.push({id,prov:d.aprobar,estado:"Aprobado",items:g.items.map(i=>({...i})),aprob:now()});log(`Aprobó el pedido ${id} a ${PROV[d.aprobar].name}`);S.hoja=id;toast(`Pedido ${id} aprobado`);render();scrollTo(0,0);return}
+  if(d.hoja){S.hoja=d.hoja;render();scrollTo(0,0);return}
+  if(d.enviado){const o=S.pedidos.find(x=>x.id===d.enviado);o.estado="Enviado";o.env=now();log(`Confirmó el envío del pedido ${o.id}`);toast("Pedido en estado enviado");render();return}
+  if(d.recibir){const o=S.pedidos.find(x=>x.id===d.recibir);S.recepcion={id:o.id,fact:[],lin:Object.fromEntries(o.items.map(i=>[i.id,{estado:"",cant:"",venc:""}]))};render();return}
+  if(d.lin){const [id,st]=d.lin.split("|");S.recepcion.lin[id].estado=st;render();return}
+  if(d.recuento){S.conc[d.recuento]={estado:"pedido"};log(`Pidió recuento de ${P[d.recuento].name}`);toast("Recuento pedido al personal de conteo");render();return}
+  if(d.aprobdif){const c=S.conc[d.aprobdif]??={};c.aprob=true;log(`Aprobó la diferencia de ${P[d.aprobdif].name} (${c.motivo})`);toast("Diferencia aprobada");render();return}
+  const A={
+    iniciarConteo(){S.conteo={vals:{},venc:{},pausado:false};S.conteoCat=null;log("Inició un conteo")},
+    pausar(){S.conteo.pausado=true;log("Pausó el conteo");toast("Conteo en pausa")},
+    retomar(){S.conteo.pausado=false},
+    volverCats(){S.conteoCat=null},
+    finalizar(){const f=PRODUCTS.filter(p=>S.conteo.vals[p.id]===undefined);if(f.length){S.conteoFinish=true}else A.cerrarIgual()},
+    seguir(){S.conteoFinish=false},
+    cerrarIgual(){S.lastConteo={fecha:"03/11/2026",user:ROLES[S.rol].user,vals:{...S.conteo.vals}};S.conteo=null;S.conteoFinish=false;S.conteoCat=null;S.draft=null;S.conc={};log("Finalizó el conteo del 03/11/2026");toast("Conteo finalizado: el pedido sugerido se recalculó")},
+    guardarRecuento(){let n=0;for(const [id,c] of Object.entries(S.conc)){if(c.estado!=="pedido")continue;const v=$("#rc-"+id).value.trim().replace(",",".");if(v===""||isNaN(Number(v))||Number(v)<0)continue;c.recuento=Number(v);c.estado="recontado";n++;log(`Registró el recuento de ${P[id].name}`)}toast(n?`Recuento guardado (${n})`:"Ingresá al menos una cantidad")},
+    cerrarHoja(){S.hoja=null},
+    copiarMsg(){const o=S.pedidos.find(x=>x.id===S.hoja);copy(mensaje(o))},
+    cancelarRec(){S.recepcion=null},
+    addFact(){const v=$("#factIn").value.trim();if(!/^\d{4}-\d{8}$/.test(v)){$("#factErr").textContent="Usá el formato 0003-00012345.";return "keep"}S.recepcion.fact.push(v)},
+    confirmarRec(){const R=S.recepcion,o=S.pedidos.find(x=>x.id===R.id);const difs=[];for(const i of o.items){const L=R.lin[i.id];if(L.estado==="distinto"){const conv=Number(String(L.cant).replace(",","."))/(P[i.id].eq||1);const dd=Math.round((conv-i.qty)*100)/100;if(dd!==0)difs.push({id:i.id,cant:dd,tipo:dd<0?"Faltante":"Excedente"})}}
+      if(difs.length){S.incid={id:o.id,fact:[...R.fact],items:difs};return}
+      o.estado="Recibido";o.fact=R.fact;S.recepcion=null;log(`Recibió el pedido ${o.id} completo`);toast("Pedido recibido")},
+    copiarInc(){const I=S.incid,o=S.pedidos.find(x=>x.id===I.id);copy(`Hola, en la entrega del pedido ${o.id} (factura ${I.fact.join(", ")}) encontramos:\n`+I.items.map(x=>`• ${P[x.id].name}: ${x.tipo.toLowerCase()}, ${fmt(Math.abs(x.cant))} ${pl(P[x.id].u)}`).join("\n"))},
+    guardarInc(){const I=S.incid,o=S.pedidos.find(x=>x.id===I.id);I.items.forEach(x=>S.historialInc.push({prov:o.prov,prod:x.id,tipo:x.tipo,cant:x.cant,fecha:"04/11/2026"}));o.estado=I.items.some(x=>x.tipo==="Faltante")?"Recibido parcial":"Recibido";o.fact=I.fact;log(`Recibió el pedido ${o.id} (${o.estado.toLowerCase()}) y registró ${I.items.length} incidencia${I.items.length>1?"s":""}`);S.incid=null;S.recepcion=null;toast(`Pedido ${o.estado.toLowerCase()}`)}
+  };
+  if(d.act&&A[d.act]){const r=A[d.act]();if(r!=="keep")render();else return}
+});
+document.addEventListener("change",e=>{
+  const t=e.target,d=t.dataset;
+  if(t.id==="rol"){S.rol=t.value;S.hoja=null;render();toast("Ahora ves BrukStock como "+ROLES[S.rol].label);return}
+  if(d.count&&d.count.startsWith("c-")){if(setCount(d.count,t.value))render();return}
+  if(d.venc){S.conteo.venc[d.venc]=t.value;const id=d.venc;if(S.conteo.vals[id]!==undefined)render();return}
+  if(d.add){if(!t.value)return;const p=P[t.value];S.draft[d.add].items.push({id:p.id,sug:0,qty:p.pres,bajo:false});toast("Producto agregado");render();return}
+  if(d.rq){S.recepcion.lin[d.rq].cant=t.value;render();return}
+  if(d.rv){S.recepcion.lin[d.rv].venc=t.value;render();return}
+  if(d.tipo){S.incid.items[Number(d.tipo)].tipo=t.value;render();return}
+  if(d.motivo){(S.conc[d.motivo]??={}).motivo=t.value;render();return}
+  if(d.obs){(S.conc[d.obs]??={}).obs=t.value;render();return}
+});
+$("#reset").addEventListener("click",()=>{S=initial();render();toast("Demo reiniciada")});
+render();
+</script>
+
+</body></html>
